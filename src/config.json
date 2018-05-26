@@ -1,0 +1,40 @@
+{
+    "allowed_users": {
+      "mke5@cdc.gov": {
+        "county": "Montserrado",
+        "district": "Greater Monrovia",
+        "facility": "Johns Hopkins University",
+        "role": "officer"
+      },
+      "linus.thiel@lr.ehealthafrica.org": {
+        "county": "Nimba",
+        "district": "Yarmein",
+        "facility": "Arcelor Mittal Yekepa Hospital",
+        "role": "officer"
+      },
+      "israel.kollie@lr.ehealthafrica.org": {
+        "county": "Lofa",
+        "district": "Salayea",
+        "facility": "Gorlu Clinic",
+        "role": "officer"
+      },
+      "lab@user.gov": {
+        "role": "lab"
+      }
+    },
+    "db": {
+      "users":{
+        "local": "usersDB1",
+        "remote": "http://localhost:5984/_users/"
+      },
+      "vehicle": {
+        "local": "vehicle1",
+        "remote": "http://localhost:5984/vehicles"
+      },
+      "auth": {
+        "username": "admin",
+        "password": "admin"
+      }
+    }
+  }
+  
