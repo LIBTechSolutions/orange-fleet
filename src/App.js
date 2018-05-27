@@ -7,13 +7,12 @@ import AppContainer from 'appcontainer/app'
 import configureStore from './store/configureStore'
 import config from './config.json'
 
-const vehicleDb = new PouchDB(config.db.vehicle.local)
 const userDb = new PouchDB(config.db.users.local)
+const configDb = new PouchDB(config.db.config.local)
 const {auth} = config.db
+const remoteConfigDb = new PouchDB(config.db.config.remote, {auth})
 
-let loadedData = {}
-const initialBatchTracker = (name) => () => { loadedData[name] = true }
-const store = configureStore(vehicleDb, initialBatchTracker)
+const store = configureStore(configDb)
 
 
 export default function App (props) {
@@ -21,7 +20,9 @@ export default function App (props) {
         <Provider store={store}>
         <AppContainer
         config={config}
+        configDb={configDb}
         userDb={userDb}
+        remoteConfigDb={remoteConfigDb}
         {...props}
         />
         </Provider>

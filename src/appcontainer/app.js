@@ -12,7 +12,8 @@ import App from "../views/UserProfile/App";
 // import RoutesConfig from "../routes/app";
 // import App from 'containers/App/App'
 // import {filterCases} from '../utils'
-import * as VehicleActions from '../actions/vehicles'
+import * as CaseActions from '../actions/cases'
+import { setAppUnsavedDataStatus } from '../actions/app'
 import { dynamicPouchReduxSetDb } from '../store/dynamicPouchReduxMiddleware'
 
 PouchDB.plugin(require('crypto-pouch'))
@@ -44,27 +45,33 @@ class AppContainer extends React.Component {
       window.alert('Unable to setup the users db, \n Please to restart the app.')
     })
 
-    this.vehicleDb = null
-    this.remoteVehicleDb = null
+    this.caseDb = null
+    this.remoteCaseDb = null
 
     this.remotePush = null
     this.remotePull = null
+    this.configPull = null
+    this.orgUnitsHelper = null
 
     this.state = {
       waitingUser: null,
       user: null,
-      vehicleDb: null,
-      remoteVehicleDb: null,
+      caseDb: null,
+      remoteCaseDb: null,
+      onlineStatus: props.initialized.configuration ? 'offline' : 'initializing',
       loginErrorVisible: false,
       busy: true
     }
 
     this.checkLogin = this.checkLogin.bind(this)
     this.logout = this.logout.bind(this)
+    this.updateOnlineStatus = this.updateOnlineStatus.bind(this)
+    this.startConfigPull = this.startConfigPull.bind(this)
+    this.stopConfigPull = this.stopConfigPull.bind(this)
   }
 
   checkLogin (username, password) {
-    this.setState({ busy: true })
+    this.setState({ busy: true, onlineStatus: 'initializing' })
     const {config, userDb} = this.props
 
     PouchDB.seamlessLogIn(username, password).then((resp) => {
@@ -91,15 +98,15 @@ class AppContainer extends React.Component {
       })
     }).then(({waitingUser, sharedSecretKey}) => {
       const auth = {username, password}
-      this.vehicleDb = new PouchDB(config.db.vehicle.local)
+      this.caseDb = new PouchDB(config.db.case.local)
       /*
         Disable crypto-pouch for this to be resolved https://github.com/pouchdb-community/transform-pouch/issues/8
         this.caseDb.crypto(sharedSecretKey)
       */
-      this.remoteVehicleDb = new PouchDB(config.db.vehicle.remote, {auth})
+      this.remoteCaseDb = new PouchDB(config.db.case.remote, {auth})
 
       // Inform pouch-redux that the database is ready
-      this.props.dispatch(dynamicPouchReduxSetDb('vehicleDb', this.vehicleDb))
+      this.props.dispatch(dynamicPouchReduxSetDb('caseDb', this.caseDb))
       this.login(waitingUser)
     })
     .catch((error) => {
@@ -108,40 +115,44 @@ class AppContainer extends React.Component {
     })
   }
 
-
   login (waitingUser) {
-    this.setState({waitingUser, loginErrorVisible: false})
+    this.updateOnlineStatus({waitingUser, loginErrorVisible: false})
   }
 
   logout () {
-    this.start({busy: false, user: null, waitingUser: null})
+    this.updateOnlineStatus({busy: false, user: null, waitingUser: null})
+    this.props.dispatch(setAppUnsavedDataStatus(false))
     this.props.dispatch({type: 'LOGOUT'})
   }
 
   loginFail () {
-    this.setState({busy: false, loginErrorVisible: true})
+    this.updateOnlineStatus({busy: false, loginErrorVisible: true})
   }
 
   isLoggedIn () {
     return !!this.state.user
   }
 
+  updateOnlineStatus (otherState) {
+    let onlineStatus = window.navigator.onLine ? 'online' : 'offline'
+    this.setState(Object.assign({}, {onlineStatus}, otherState))
+  }
+
   componentWillReceiveProps (nextProps) {
     // Move to dashboard screen only when everything is ready
-    if (!this.state.user) {
-      this.setState({busy: false, user: this.state.waitingUser, loginErrorVisible: false})
+    if (nextProps.initialized.everything && !this.state.user) {
+      this.updateOnlineStatus({busy: false, user: this.state.waitingUser, loginErrorVisible: false})
     }
   }
-  
+
   componentDidUpdate (prevProps, prevState) {
     if (prevState.user && this.state.user === null) {
       // User logged out (stop casedb sync)
       this.stopRemotePush()
       this.stopRemotePull()
-      // this.stopEpiSync()
-      Promise.all([this.vehicleDb.close(), this.remoteVehicleDb.close()]).then(() => {
-        this.vehicleDb = null
-        this.remoteVehicleDb = null
+      Promise.all([this.caseDb.close(), this.remoteCaseDb.close()]).then(() => {
+        this.caseDb = null
+        this.remoteCaseDb = null
       })
     } else if (prevState.user !== this.state.user) {
       // New user logged in (start casedb sync)
@@ -150,17 +161,22 @@ class AppContainer extends React.Component {
     }
   }
 
+  componentDidMount () {
+    window.addEventListener('online', this.updateOnlineStatus)
+    window.addEventListener('offline', this.updateOnlineStatus)
 
-  // componentDidMount () {
-  //   this.startRemotePush()
-  //   this.startRemotePull()
-    
-  // }
+    this.startConfigPull()
+  }
 
-  // componentWillUnmount () {
-  //   this.stopRemotePush()
-  //   this.stopRemotePull()
-  // }
+  componentWillUnmount () {
+    window.removeEventListener('online', this.updateOnlineStatus)
+    window.removeEventListener('offline', this.updateOnlineStatus)
+
+    this.stopConfigPull()
+  }
+
+
+  
 
   render () {
     return <App {...this.state} {...this.props}
@@ -170,14 +186,50 @@ class AppContainer extends React.Component {
     />
   }
 
+  startConfigPull () {
+    console.log('starting remote pull config')
+    this.configPull = this.props.configDb.replicate.from(this.props.remoteConfigDb, {
+      live: true,
+      retry: true
+    }).on('complete', () => {
+      console.log('Config pull complete')
+    }).on('paused', (err) => {
+      // If we get error here, we're offline with regards to the database
+      // whatever the user agent online status says. Otherwise, check with UA.
+      if (err) {
+        this.setState({onlineStatus: 'offline'})
+      } else {
+        this.updateOnlineStatus()
+      }
+    }).on('active', () => {
+      this.setState({onlineStatus: 'syncing'})
+    }).on('error', (err) => {
+      console.log(err)
+    })
+  }
+
+  stopConfigPull () {
+    this.configPull && this.configPull.cancel()
+  }
+
   startRemotePush () {
     // replicate db
     console.log('starting remote push')
-    this.remotePush = this.vehicleDb.replicate.to(this.remoteVehicleDb, {
+    this.remotePush = this.caseDb.replicate.to(this.remoteCaseDb, {
       live: true,
       retry: true
     }).on('complete', () => {
       console.log('Remote push complete')
+    }).on('paused', (err) => {
+      // If we get error here, we're offline with regards to the database
+      // whatever the user agent online status says. Otherwise, check with UA.
+      if (err) {
+        this.setState({onlineStatus: 'offline'})
+      } else {
+        this.updateOnlineStatus()
+      }
+    }).on('active', () => {
+      this.setState({onlineStatus: 'syncing'})
     }).on('error', (err) => {
       console.log(err)
     })
@@ -188,15 +240,23 @@ class AppContainer extends React.Component {
   }
 
   startRemotePull () {
-    let {user} = this.state
+    // const {user} = this.state
+    // let query = getUserOrganisationUnits(user, this.props.organisationUnits)
+    // query.user = user.name
 
-    console.log('starting remote pull for user', user)
-    this.remotePull = this.vehicleDb.replicate.from(this.remoteVehicleDb, {
+    console.log('starting remote pull for user')
+    this.remotePull = this.caseDb.replicate.from(this.remoteCaseDb, {
       live: true,
       retry: true,
-    //   filter: filterCases(user) // FIXME: Use a design doc with query
+      // filter: 'docs/user_cases',
+      // query_params: query
     }).on('complete', () => {
       console.log('Remote pull complete')
+    }).on('paused', (err) => {
+      if (err) console.log(err)
+      this.updateOnlineStatus()
+    }).on('active', () => {
+      this.setState({onlineStatus: 'syncing'})
     }).on('error', (err) => {
       console.log(err)
     })
@@ -206,19 +266,23 @@ class AppContainer extends React.Component {
     this.remotePull && this.remotePull.cancel()
   }
 
-
 }
 
 function mapStateToProps (state) {
   return {
-    vehicleDetails: state.vehicleDetails,
+    updatedCase: state.caseData.updated,
+    idsrCases: state.caseData.idsrCases,
+    organisationUnits: state.organisationUnits,
+    dataElements: state.dataElements,
+    attributes: state.attributes,
+    syncState: state.syncState,
     initialized: state.initialized
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    actions: bindActionCreators(VehicleActions, dispatch),
+    actions: bindActionCreators(CaseActions, dispatch),
     dispatch // for general purpose use case
   }
 }

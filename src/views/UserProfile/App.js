@@ -40,21 +40,8 @@ import image from 'assets/img/sidebar-2.jpg';
 import logo from 'assets/img/Logo-Orange.png';
 
 import {
-    Dashboard, Person, ContentPaste, LibraryBooks, BubbleChart, LocationOn, Notifications
+    Dashboard, Person, ContentPaste, LibraryBooks, BubbleChart, LocationOn, Notifications, LocalTaxi
 } from 'material-ui-icons';
-
-
-
-
-// export default function App (props) {
-//     return (
-//         <DashboardPage {...props} />
-//     )
-// }
-
-
-
-
 
 
 class App extends React.Component{
@@ -71,16 +58,20 @@ class App extends React.Component{
     getRoute(){
         return this.props.location.pathname !== "/maps";
     }
-    // componentDidMount(){
-    //     if(window.innerWidth > 991)
-    //     {
-    //         // eslint-disable-next-line
-    //         const ps = new PerfectScrollbar(this.refs.mainPanel);
-    //     }
-    // }
-    // componentDidUpdate(){
-    //     this.refs.mainPanel.scrollTop = 0;
-    // }
+    componentDidMount(){
+            if(this.props.loggedIn) {
+                if(window.innerWidth > 991)
+                {
+                    // eslint-disable-next-line
+                    const ps = new PerfectScrollbar(this.refs.mainPanel);
+                }
+        }
+    }
+    componentDidUpdate(){
+        if(this.props.loggedIn) {
+            this.refs.mainPanel.scrollTop = 0;
+        }
+    }
 
     DashboardPageComponent = (props) => {
         return (
@@ -124,14 +115,6 @@ class App extends React.Component{
         )
     }
 
-    // IndexPageComponent (props) {
-        
-    //     return <IndexPage initialized={props.initialized}
-    //             busy={props.busy}
-    //             checkLogin={props.checkLogin}
-    //             loginErrorVisible={props.loginErrorVisible} />
-    // }
-
 
     render(){
 
@@ -140,13 +123,9 @@ class App extends React.Component{
                         checkLogin={this.props.checkLogin}
                         loginErrorVisible={this.props.loginErrorVisible} />)
 
-        // const loginRoutes = [
-        //     { path: "/login", sidebarName: "Dashboard", navbarName: "Fleet Dashboard", icon: Dashboard, component: this.IndexPageComponent, ...this.props  }
-        // ]
-
         const appRoutes = [
             { path: "/dashboard", sidebarName: "Dashboard", navbarName: "Fleet Dashboard", icon: Dashboard, component: this.DashboardPageComponent  },
-            { path: "/user", sidebarName: "User Profile", navbarName: "Profile", icon: Person, component: this.UserProfileComponent, ...this.props },
+            { path: "/user", sidebarName: "Vehicles", navbarName: "Vehicles", icon: LocalTaxi, component: this.UserProfileComponent, ...this.props },
             { path: "/table", sidebarName: "Table List", navbarName: "Table List", icon: ContentPaste, component: this.TableListComponent },
             { path: "/typography", sidebarName: "Typography", navbarName: "Typography", icon: LibraryBooks, component: this.TypographyComponent },
             { path: "/icons", sidebarName: "Icons", navbarName: "Icons", icon: BubbleChart, component: this.IconsComponent },

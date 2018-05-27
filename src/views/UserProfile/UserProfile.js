@@ -7,7 +7,7 @@ import {getVehicles} from 'vehicleDetails'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import * as VehicleActions from 'actions/vehicles'
+import * as CaseActions from 'actions/cases'
 
 class UserProfile extends React.Component {
   constructor (props) {
@@ -98,8 +98,8 @@ class UserProfile extends React.Component {
 
   saveInfo (doc) {
     let action = this.state.isNewCase
-      ? this.props.actions.insertVehicle
-      : this.props.actions.updateVehicle
+      ? this.props.actions.insertCase
+      : this.props.actions.updateCase
 
     action(doc)
 
@@ -171,13 +171,14 @@ class UserProfile extends React.Component {
 
 function mapStateToProps (state) {
   return {
-    vehicleDetails: state.vehicleDetails
+    updatedCase: state.caseData.updated,
+    idsrCases: state.caseData.idsrCases,
   }
 }
 
 function mapDispatchToProps (dispatch) {
   return {
-    actions: bindActionCreators(VehicleActions, dispatch)
+    actions: bindActionCreators(CaseActions, dispatch)
   }
 }
 
