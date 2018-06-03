@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import Form from './Form'
 import SaveInfo from './SaveInfo'
-import TablePage from '../TableList/TablePage'
+import TablePage from '../BookList/TablePage'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'

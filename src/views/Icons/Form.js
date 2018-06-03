@@ -12,7 +12,7 @@ import {
 
 import avatar from 'assets/img/faces/marc.jpg';
 import FormInfo from './FormInfo';
-import { getVehicles, completeInfo } from 'vehicleDetails'
+import { getVehicles, completeInfo } from 'bookingDetails'
 
 class Form extends React.Component{
     constructor (props) {

@@ -1,42 +1,47 @@
-'use strict'
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
-import React from 'react'
-import classnames from 'classnames'
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+};
 
-/**
- * Render an input with label
- * */
-export default function Input (props) {
-  const classes = classnames('input', props.className, {required: props.required})
-  const value = ('value' in props)
-    ? props.value
-    : props.getValue(props.name)
-  const label = ('label' in props)
-    ? props.label
-    : props.getLabel(props.name)
-
+function ButtonAppBar(props) {
+  const { classes } = props;
   return (
-    <div className={classes}>
-      <label>{label}</label>
-      <input type={props.type || 'text'}
-        value={value}
-        {...getInputProps(props)}
-      />
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="title" color="inherit" className={classes.flex}>
+            Title
+          </Typography>
+          <Button color="inherit">Login</Button>
+        </Toolbar>
+      </AppBar>
     </div>
-  )
+  );
 }
 
-/**
- * Return any properties that are input attributes
- * */
-function getInputProps (props) {
-  const propNames = [
-    'name', 'placeholder', 'min', 'max', 'pattern', 'onChange',
-    'required', 'readOnly', 'disabled'
-  ]
+ButtonAppBar.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-  return propNames.reduce((inputProps, prop) => {
-    if (prop in props) inputProps[prop] = props[prop]
-    return inputProps
-  }, {})
-}
+export default withStyles(styles)(ButtonAppBar);

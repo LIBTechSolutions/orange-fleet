@@ -32,7 +32,7 @@ class RegularCard extends React.Component{
 }
 
 RegularCard.defaultProps = {
-    headerColor: 'purple',
+    headerColor: 'orange',
 };
 
 RegularCard.propTypes = {

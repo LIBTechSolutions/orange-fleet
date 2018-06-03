@@ -28,8 +28,8 @@
         "remote": "http://localhost:5984/_users/"
       },
       "case": {
-        "local": "vehicles-001",
-        "remote": "http://localhost:5984/vehicles"
+        "local": "vehicles-002",
+        "remote": "http://localhost:5984/vehicledb2"
       },
       "config": {
         "local": "vehicle-config-001",

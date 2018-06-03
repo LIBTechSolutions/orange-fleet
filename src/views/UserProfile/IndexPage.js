@@ -1,15 +1,26 @@
-'use strict'
+import React from 'react';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import { 
+  withStyles, IconButton, Input, FormControl, AppBar, Typography,
+  InputLabel, InputAdornment, TextField, Toolbar
+} from 'material-ui';
 
-import React from 'react'
-import classnames from 'classnames'
+import { Visibility, VisibilityOff } from 'material-ui-icons';
+import {
+  Button
+} from 'components';
 
-export default class IndexPage extends React.Component {
-  constructor (props) {
-    super(props)
-    this.authenticate = this.authenticate.bind(this)
-  }
+import logo from 'assets/img/Logo-Orange2.PNG';
 
-  authenticate (event) {
+
+class IndexPage extends React.Component {
+  state = {
+    password: '',
+    showPassword: false
+  };
+
+  authenticate = (event) => {
     event.preventDefault()
     let elements = event.target.elements
     let username = elements.namedItem('email').value
@@ -20,13 +31,28 @@ export default class IndexPage extends React.Component {
     this.props.checkLogin(username, password)
   }
 
-  render () {
+
+  handleChange = prop => event => {
+    this.setState({ [prop]: event.target.value });
+  };
+
+  handleMouseDownPassword = event => {
+    event.preventDefault();
+  };
+
+  handleClickShowPassword = () => {
+    this.setState({ showPassword: !this.state.showPassword });
+  };
+
+  render() {
+    const { classes } = this.props;
+
     let {loginErrorVisible} = this.props
     let emailChangeHandlers = {}
     let loginAlert = ''
 
     if (loginErrorVisible) {
-      let alertClasses = classnames('login-alert', 'alert-danger', {
+      let alertClasses = classNames('login-alert', 'alert-danger', {
         active: !this.state.loginAlertDeactivated
       })
       loginAlert = <span className={alertClasses}>Invalid Credentials:</span>
@@ -36,56 +62,97 @@ export default class IndexPage extends React.Component {
     }
 
     return (
-      <div className='home'>
-        <form action='' onSubmit={this.authenticate}>
-          <div className='logo'>
+      <div className={classes.root} >
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+           
+          </IconButton>
+          <Typography variant="title" color="inherit" className={classes.flex}>
+            Orange Fleet
+          </Typography>
+          <img style={{ height: 50, width: 50 }}src={logo} alt="logo" className={classes.img}/>
+        </Toolbar>
+      </AppBar>
+      <form action='' onSubmit={this.authenticate} style={indexStyles.loginStyle}>
+      <div className='logo'>
             <h1>Orange Fleet</h1>
           </div>
           <div className='login'>
             {this.props.busy &&
-              <i className="fas fa-spinner fa-pulse fa-5x" style={{ position: 'relative' }}></i>
+              <i className="fas fa-circle-notch fa-spin fa-5x" style={{ position: 'relative' }}></i>
             }
-            <div className='login-form'>
-              {loginErrorVisible && loginAlert}
-              <div className='login-inputs'>
-                <div className='input'>
-                  <label>E-mail</label>
-                  <input
-                    {...emailChangeHandlers}
-                    name='email' type='text'
-                    placeholder='E-mail address'
-                    autoFocus
-                    required
-                    disabled={this.props.busy}
-                    className='space-after'
-                  />
-                </div>
-                <div className='input'>
-                  <label>Password</label>
-                  <input
-                    name='password' type='password'
-                    placeholder='Password'
-                    required
-                    disabled={this.props.busy}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <button
-              type='submit'
-              className='btn'
-              disabled={this.props.busy}>
-                Login
-            </button>
-          </div>
+      </div>
+      <FormControl className={classNames(classes.margin)}>
+        {loginErrorVisible && loginAlert}
+          <InputLabel >Email</InputLabel>
+          <Input
+          {...emailChangeHandlers}
+            name='email'
+            required
+            type='text'
+            required
+            autoFocus
+            disabled={this.props.busy}
+          />
+        </FormControl> <br/>
+        <FormControl className={classNames(classes.margin, classes.textField)}>
+          <InputLabel htmlFor="adornment-password">Password</InputLabel>
+          <Input
+            id="adornment-password"
+            name='password'
+            required
+            type={this.state.showPassword ? 'text' : 'password'}
+            value={this.state.password}
+            onChange={this.handleChange('password')}
+            disabled={this.props.busy}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="Toggle password visibility"
+                  onClick={this.handleClickShowPassword}
+                  onMouseDown={this.handleMouseDownPassword}
+                >
+                  {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl><br/>
+        <Button color='primary' type='submit' disabled={this.props.busy}>Login</Button>
         </form>
       </div>
-    )
+    );
   }
 }
 
-const styles = {
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  withoutLabel: {
+    marginTop: theme.spacing.unit * 3,
+  },
+  textField: {
+    flexBasis: 200,
+  },
+  root: {
+    flexGrow: 1,
+  },
+  flex: {
+    flex: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+});
+
+const indexStyles = {
   style: {
     margin: 15
   },
@@ -97,3 +164,11 @@ const styles = {
   }
  
  };
+
+
+
+IndexPage.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(IndexPage);

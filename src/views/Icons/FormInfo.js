@@ -23,20 +23,20 @@ export default class FormInfo extends React.Component {
           <Grid container>
             <ItemGrid xs={12} sm={12} md={6}>
               <FormControl>
-                <InputLabel>Registration Number</InputLabel>
-                <Input name='regNumber'
-                  type='number'
-                  value={props['regNumber']}
+                <InputLabel>Employee ID</InputLabel>
+                <Input name='employeeID'
+                  type='text'
+                  value={props['employeeID']}
                   onChange={handleChange}
                 />
               </FormControl>
             </ItemGrid>
             <ItemGrid xs={12} sm={12} md={6}>
             <FormControl>
-              <InputLabel>Model</InputLabel>
-              <Input name='model'
+              <InputLabel>Name</InputLabel>
+              <Input name='name'
                 type='text'
-                value={props['model']}
+                value={props['name']}
                 onChange={handleChange}
               />
               </FormControl>
@@ -45,20 +45,20 @@ export default class FormInfo extends React.Component {
           <Grid container>
             <ItemGrid xs={12} sm={12} md={6}>
             <FormControl>
-              <InputLabel>Vehicle Category</InputLabel>
-              <Input name='vehicleCategory'
+              <InputLabel>Title</InputLabel>
+              <Input name='title'
                 type='text'
-                value={props['vehicleCategory']}
+                value={props['title']}
                 onChange={handleChange}
                 />
                 </FormControl>
             </ItemGrid>
             <ItemGrid xs={12} sm={12} md={6}>
             <FormControl>
-              <InputLabel>Plate Number</InputLabel>
-              <Input name='plateNumber'
-                type='number'
-                value={props['plateNumber']}
+              <InputLabel>Department</InputLabel>
+              <Input name='department'
+                type='text'
+                value={props['department']}
                 onChange={handleChange}
               />
               </FormControl>
@@ -67,20 +67,20 @@ export default class FormInfo extends React.Component {
           <Grid container>
             <ItemGrid xs={12} sm={12} md={6}>
             <FormControl>
-              <InputLabel>Engine Number</InputLabel>
-              <Input name='engineNumber'
-                type='number'
-                value={props['engineNumber']}
+              <InputLabel>Starting Place</InputLabel>
+              <Input name='startPlace'
+                type='text'
+                value={props['startPlace']}
                 onChange={handleChange}
               />
               </FormControl>
             </ItemGrid>
             <ItemGrid xs={12} sm={12} md={6}>
             <FormControl>
-              <InputLabel>Engine Size</InputLabel>
-              <Input name='engineSize'
+              <InputLabel>Destination</InputLabel>
+              <Input name='destination'
                 type='text'
-                value={props['engineSize']}
+                value={props['destination']}
                 onChange={handleChange}
               />
               </FormControl>
@@ -89,20 +89,20 @@ export default class FormInfo extends React.Component {
         <Grid container>
           <ItemGrid xs={12} sm={12} md={6}>
           <FormControl>
-              <InputLabel>Registration Date</InputLabel>
-            <Input name='registrationDate'
-              type='date'
-              value={props['registrationDate']}
+              <InputLabel>Purpose</InputLabel>
+            <Input name='purpose'
+              type='text'
+              value={props['purpose']}
               onChange={handleChange}
             />
             </FormControl>
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={6}>
           <FormControl>
-            <InputLabel>Expiration Date</InputLabel>
-            <Input name='expiryDate'
+            <InputLabel>Date</InputLabel>
+            <Input name='bookingDate'
               type='date'
-              value={props['expiryDate']}
+              value={props['bookingDate']}
               onChange={handleChange}
             />
             </FormControl>
@@ -111,10 +111,20 @@ export default class FormInfo extends React.Component {
         <Grid container>
         <ItemGrid xs={12} sm={12} md={6}>
         <FormControl>
-          <InputLabel>Color</InputLabel>
-          <Input name='color'
-            type='text'
-            value={props['color']}
+          <InputLabel>Time Out</InputLabel>
+          <Input name='timeout'
+            type='time'
+            value={props['timeout']}
+            onChange={handleChange}
+          />
+          </FormControl>
+      </ItemGrid>
+      <ItemGrid xs={12} sm={12} md={6}>
+        <FormControl>
+          <InputLabel>Time in</InputLabel>
+          <Input name='timein'
+            type='time'
+            value={props['timein']}
             onChange={handleChange}
           />
           </FormControl>

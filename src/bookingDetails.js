@@ -1,4 +1,4 @@
-import { toDateString, receiptId, generateId } from './utils'
+import { toDateString, generateId } from './utils'
 import { toIndexableString } from 'pouchdb-collate'
 
 /** Simple model for an IDSR case.
@@ -12,18 +12,19 @@ export function getVehicles () {
   let vehicleModel = {
     created: new Date().getTime(),
     vehicleInfo: {
-        docId: receiptId(),
-        vehicleID: generateId(),
+        docId: generateId(),
+        bookingID: generateId(),
         date: toDateString(new Date()),
-        regNumber: '',
-        model: '',
-        vehicleCategory: '',
-        plateNumber: '',
-        registrationDate: '',
-        expiryDate: '',
-        engineSize: '',
-        engineNumber: '',
-        color: ''
+        employeeID: '',
+        name: '',
+        title: '',
+        department: '',
+        startPlace: '',
+        destination: '',
+        purpose: '',
+        bookingDate: '',
+        timeout: '',
+        timein: ''
     }
   }
   return Object.assign({}, vehicleModel, {

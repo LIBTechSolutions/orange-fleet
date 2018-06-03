@@ -1,11 +1,12 @@
 import React from 'react';
+import { Provider } from 'react-redux'
+import PouchDB from 'pouchdb-browser'
 import UserProfile from './UserProfile'
 
 import DashboardPage from "../Dashboard/Dashboard.jsx";
 
-import TableList from "../TableList/TableList.jsx";
 import Typography from "../Typography/Typography.jsx";
-import Icons from "../Icons/Icons.jsx";
+import Icons from "../Icons/Icons";
 import Maps from "../Maps/Maps.jsx";
 import NotificationsPage from "../Notifications/Notifications.jsx";
 import IndexPage from './IndexPage'
@@ -40,8 +41,14 @@ import image from 'assets/img/sidebar-2.jpg';
 import logo from 'assets/img/Logo-Orange.png';
 
 import {
-    Dashboard, Person, ContentPaste, LibraryBooks, BubbleChart, LocationOn, Notifications, LocalTaxi
+    Dashboard, Person, ContentPaste, LibraryBooks, BubbleChart, LocationOn, 
+    Notifications, LocalTaxi, Flight, LocalGasStation
 } from 'material-ui-icons';
+
+import configureStore from 'store/configureStore'
+import config from 'config.json'
+const configDb = new PouchDB(config.db.config.local)
+const store = configureStore(configDb)
 
 
 class App extends React.Component{
@@ -75,43 +82,43 @@ class App extends React.Component{
 
     DashboardPageComponent = (props) => {
         return (
-            <DashboardPage {...props} />
+            <DashboardPage {...this.props} />
         )
     }
 
     UserProfileComponent = (props) => {
+        let { idsrCases, user } = this.props
+        console.log(user.role)
         return (
-            <UserProfile {...props} />
-        )
-    }
-
-    TableListComponent = (props) => {
-        return (
-            <TableList {...props} />
+            
+            <UserProfile
+            {...this.props}
+            />
+            
         )
     }
 
     TypographyComponent = (props) => {
         return (
-            <Typography {...props} />
+            <Typography {...this.props} />
         )
     }
 
     IconsComponent = (props) => {
         return (
-            <Icons {...props} />
+            <Icons {...this.props} />
         )
     }
 
     MapsComponent = (props) => {
         return (
-            <Maps {...props} />
+            <Maps {...this.props} />
         )
     }
 
     NotificationsPageComponent = (props) => {
         return (
-            <NotificationsPage {...props} />
+            <NotificationsPage {...this.props} />
         )
     }
 
@@ -125,10 +132,9 @@ class App extends React.Component{
 
         const appRoutes = [
             { path: "/dashboard", sidebarName: "Dashboard", navbarName: "Fleet Dashboard", icon: Dashboard, component: this.DashboardPageComponent  },
-            { path: "/user", sidebarName: "Vehicles", navbarName: "Vehicles", icon: LocalTaxi, component: this.UserProfileComponent, ...this.props },
-            { path: "/table", sidebarName: "Table List", navbarName: "Table List", icon: ContentPaste, component: this.TableListComponent },
-            { path: "/typography", sidebarName: "Typography", navbarName: "Typography", icon: LibraryBooks, component: this.TypographyComponent },
-            { path: "/icons", sidebarName: "Icons", navbarName: "Icons", icon: BubbleChart, component: this.IconsComponent },
+            { path: "/vehicle", sidebarName: "Vehicles", navbarName: "Vehicles", icon: LocalTaxi, component: this.UserProfileComponent, ...this.props },
+            { path: "/request", sidebarName: "Requests", navbarName: "Requests", icon: Flight, component: this.IconsComponent },
+            { path: "/fuel", sidebarName: "Fuel", navbarName: "Fuel", icon: LocalGasStation, component: this.TypographyComponent },
             { path: "/maps", sidebarName: "Maps", navbarName: "Map", icon: LocationOn, component: this.MapsComponent },
             { path: "/notifications", sidebarName: "Notifications", navbarName: "Notifications", icon: Notifications, component: this.NotificationsPageComponent },
             { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
