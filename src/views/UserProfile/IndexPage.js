@@ -55,7 +55,7 @@ class IndexPage extends React.Component {
       let alertClasses = classNames('login-alert', 'alert-danger', {
         active: !this.state.loginAlertDeactivated
       })
-      loginAlert = <span className={alertClasses}>Invalid Credentials:</span>
+      loginAlert = <span className={alertClasses}>Invalid Credentials, Please Try Again...</span>
       emailChangeHandlers.onChange = () => {
         this.setState({loginAlertDeactivated: true})
       }
@@ -69,14 +69,14 @@ class IndexPage extends React.Component {
            
           </IconButton>
           <Typography variant="title" color="inherit" className={classes.flex}>
-            Orange Fleet
+            OLIB Fleet Management System
           </Typography>
           <img style={{ height: 50, width: 50 }}src={logo} alt="logo" className={classes.img}/>
         </Toolbar>
       </AppBar>
       <form action='' onSubmit={this.authenticate} style={indexStyles.loginStyle}>
       <div className='logo'>
-            <h1>Orange Fleet</h1>
+            <h1>OLIB Fleet Management System</h1>
           </div>
           <div className='login'>
             {this.props.busy &&
@@ -164,7 +164,6 @@ const indexStyles = {
   }
  
  };
-
 
 
 IndexPage.propTypes = {
