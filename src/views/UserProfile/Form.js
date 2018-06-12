@@ -22,7 +22,7 @@ class Form extends React.Component{
         this.state = {
             canSubmit: false,
             vehicleDetail: vehicleDetail,
-      
+
           }
         this.submitInfo = this.submitInfo.bind(this)
         this.updateDoc = this.updateDoc.bind(this)
@@ -36,9 +36,9 @@ class Form extends React.Component{
             (nextProps.updateDoc === nextProps.docId ||
              this.props.docId !== nextProps.docId)) {
           const vehicleDetail = nextProps.docId
-            ? this.props.idsrCases.find(({_id}) => _id === nextProps.docId)
+            ? this.props.vehicleDetails.find(({_id}) => _id === nextProps.docId)
             : getVehicles(nextProps)
-    
+
           this.setState({
             vehicleDetail: vehicleDetail
           })
@@ -51,14 +51,14 @@ class Form extends React.Component{
           let value = e.target.type === 'checkbox'
                     ? e.target.checked
                     : e.target.value
-    
+
           this.setState((prevState, props) => {
             let vehicleDetail = {
               vehicleInfo: {
                 [key]: {$set: value}
               }
             }
-    
+
             if (typeof dependentProps === 'function') {
               let calculatedProps = dependentProps(value)
               for (let prop in calculatedProps) {
@@ -69,7 +69,7 @@ class Form extends React.Component{
                 vehicleDetail.vehicleInfo[prop] = {$set: dependentProps[prop](value)}
               }
             }
-    
+
             return update(prevState, {vehicleDetail, hasChanged: {$set: true}})
           })
           this.props.toggleHasChanged()
@@ -88,7 +88,7 @@ class Form extends React.Component{
           ? this.props.edit && this.props.hasChanged && this.form.checkValidity()
           : false
       }
-    
+
       submitInfo (event) {
         event.preventDefault()
 
@@ -109,7 +109,7 @@ class Form extends React.Component{
       } = props
 
           let {vehicleDetail} = this.state
-      
+
 
         return (
             <form action='' onSubmit={this.submitInfo} ref={form => { this.form = form }}>

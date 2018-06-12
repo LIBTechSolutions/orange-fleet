@@ -3,9 +3,9 @@ import {
     withStyles, Grid
 } from 'material-ui';
 import {
-    AirportShuttle, FlightTakeoff, DirectionsCar, Warning, DateRange,  
-    LocalOffer, Update, ArrowUpward, AccessTime, 
-    Accessibility, LocalTaxi, LocalGasStation
+    AirportShuttle, FlightTakeoff, DirectionsCar, Warning, DateRange,
+    LocalOffer, Update, ArrowUpward, AccessTime,
+    Accessibility, LocalTaxi, LocalGasStation, Person, People
 } from 'material-ui-icons';
 import PropTypes from 'prop-types';
 // react plugin for creating charts
@@ -35,8 +35,8 @@ class Dashboard extends React.Component{
         this.setState({ value: index });
     };
     render(){
-        const complete = this.props.idsrCases.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.employeeID)
-        const completeRequest = this.props.idsrCases.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.regNumber)
+        const complete = this.props.vehicleDetails.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.employeeID)
+        const completeRequest = this.props.vehicleDetails.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.regNumber)
         return (
             <div>
                 <Grid container>
@@ -51,7 +51,16 @@ class Dashboard extends React.Component{
                     </ItemGrid>
                     <ItemGrid xs={12} sm={6} md={3}>
                         <StatsCard
-                            icon={FlightTakeoff}
+                            icon={DirectionsCar}
+                            iconColor="red"
+                            title="Available Vehicles"
+                            description={complete.length}
+                            statIcon={LocalTaxi}
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={3}>
+                        <StatsCard
+                            icon={AirportShuttle}
                             iconColor="green"
                             title="Trip Requests"
                             description={completeRequest.length}
@@ -63,7 +72,34 @@ class Dashboard extends React.Component{
                             icon={DirectionsCar}
                             iconColor="red"
                             title="Vehicles Out"
-                            description={completeRequest.length}
+                            description={complete.length}
+                            statIcon={LocalTaxi}
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={3}>
+                        <StatsCard
+                            icon={People}
+                            iconColor="purple"
+                            title="Total Drivers"
+                            description={complete.length}
+                            statIcon={LocalTaxi}
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={3}>
+                        <StatsCard
+                            icon={People}
+                            iconColor="orange"
+                            title="Available Drivers"
+                            description={complete.length}
+                            statIcon={LocalTaxi}
+                        />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={6} md={3}>
+                        <StatsCard
+                            icon={People}
+                            iconColor="red"
+                            title="Drivers Out"
+                            description={complete.length}
                             statIcon={LocalTaxi}
                         />
                     </ItemGrid>

@@ -7,15 +7,15 @@ export default class TablePage extends React.Component {
       super(props)
       this.state = {
         currentSearchTerm: '',
-        idsrCases: props.idsrCases,
-        filteredIdsrCases: props.idsrCases
+        VehicleDetails: props.vehicleDetails,
+        filteredVehicleDetails: props.vehicleDetails
       }
       this.filterCases = this.filterCases.bind(this)
       this.handleSearch = this.handleSearch.bind(this)
     }
   
-    filterCases (searchTerm, idsrCases) {
-      let result = idsrCases
+    filterCases (searchTerm, vehicleDetails) {
+      let result = vehicleDetails
       const stringContains = (haystack, needle) => {
         return haystack ? haystack.toLowerCase().includes(needle.toLowerCase()) : false
       }
@@ -36,23 +36,23 @@ export default class TablePage extends React.Component {
   
     handleSearch (search) {
       this.setState({
-        filteredIdsrCases: this.filterCases(search.word, this.state.idsrCases),
+        filteredVehicleDetails: this.filterCases(search.word, this.state.vehicleDetails),
         currentSearchTerm: search.word
       })
     }
   
     componentWillReceiveProps (nextProps) {
       this.setState({
-        vehicleDetails: nextProps.idsrCases,
-        filteredIdsrCases: this.filterCases(this.state.currentSearchTerm, nextProps.idsrCases)
+        vehicleDetails: nextProps.vehicleDetails,
+        filteredVehicleDetails: this.filterCases(this.state.currentSearchTerm, nextProps.vehicleDetails)
       })
     }
   
     render () {
-      const filteredIdsrCases = this.state.filteredIdsrCases
+      const filteredVehicleDetails = this.state.filteredVehicleDetails
   
-      const complete = filteredIdsrCases.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.regNumber)
-    //   const incomplete = filteredIdsrCases.filter(idsrCase => !!idsrCase.caseInfo && !idsrCase.complete)
+      const complete = filteredVehicleDetails.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.regNumber)
+    //   const incomplete = filteredVehicleDetails.filter(vehicleDetail => !!vehicleDetail.caseInfo && !vehicleDetail.complete)
   
       
       return (

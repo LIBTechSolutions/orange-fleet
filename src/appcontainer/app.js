@@ -176,7 +176,7 @@ class AppContainer extends React.Component {
   }
 
 
-  
+
 
   render () {
     return <App {...this.state} {...this.props}
@@ -271,7 +271,7 @@ class AppContainer extends React.Component {
 function mapStateToProps (state) {
   return {
     updatedCase: state.caseData.updated,
-    idsrCases: state.caseData.idsrCases,
+    vehicleDetails: state.caseData.vehicleDetails,
     organisationUnits: state.organisationUnits,
     dataElements: state.dataElements,
     attributes: state.attributes,

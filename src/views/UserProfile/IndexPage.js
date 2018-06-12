@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { 
+import {
   withStyles, IconButton, Input, FormControl, AppBar, Typography,
   InputLabel, InputAdornment, TextField, Toolbar
 } from 'material-ui';
@@ -55,7 +55,7 @@ class IndexPage extends React.Component {
       let alertClasses = classNames('login-alert', 'alert-danger', {
         active: !this.state.loginAlertDeactivated
       })
-      loginAlert = <span className={alertClasses}>Invalid Credentials, Please Try Again...</span>
+      loginAlert = <span className={alertClasses}>Invalid username or password</span>
       emailChangeHandlers.onChange = () => {
         this.setState({loginAlertDeactivated: true})
       }
@@ -63,29 +63,29 @@ class IndexPage extends React.Component {
 
     return (
       <div className={classes.root} >
-      <AppBar position="static">
+      <AppBar position="static" style={{backgroundColor: '#676b6b'}}>
         <Toolbar>
           <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-           
+
           </IconButton>
           <Typography variant="title" color="inherit" className={classes.flex}>
             OLIB Fleet Management System
           </Typography>
-          <img style={{ height: 50, width: 50 }}src={logo} alt="logo" className={classes.img}/>
+
         </Toolbar>
       </AppBar>
       <form action='' onSubmit={this.authenticate} style={indexStyles.loginStyle}>
       <div className='logo'>
-            <h1>OLIB Fleet Management System</h1>
+            <img style={{ height: 120, width: 120, marginTop: 10 }}src={logo} alt="logo" className={classes.img}/>
           </div>
           <div className='login'>
             {this.props.busy &&
               <i className="fas fa-circle-notch fa-spin fa-5x" style={{ position: 'relative' }}></i>
             }
       </div>
+      {loginErrorVisible && loginAlert}<br />
       <FormControl className={classNames(classes.margin)}>
-        {loginErrorVisible && loginAlert}
-          <InputLabel >Email</InputLabel>
+          <InputLabel >Username</InputLabel>
           <Input
           {...emailChangeHandlers}
             name='email'
@@ -119,7 +119,7 @@ class IndexPage extends React.Component {
             }
           />
         </FormControl><br/>
-        <Button color='primary' type='submit' disabled={this.props.busy}>Login</Button>
+        <Button style={{backgroundColor: '#676b6b'}} type='submit' disabled={this.props.busy}>Login</Button>
         </form>
       </div>
     );
@@ -133,9 +133,12 @@ const styles = theme => ({
   },
   margin: {
     margin: theme.spacing.unit,
+    width: 150,
+
   },
   withoutLabel: {
     marginTop: theme.spacing.unit * 3,
+
   },
   textField: {
     flexBasis: 200,
@@ -162,7 +165,7 @@ const indexStyles = {
     alignItems: 'center',
     textAlign: 'center'
   }
- 
+
  };
 
 

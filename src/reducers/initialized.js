@@ -3,7 +3,8 @@
 import { DATA_INITIALIZED, RESET_CASES } from '../constants/ActionTypes'
 
 const initialState = {
-  idsrCases: false,
+  vehicleDetails: false,
+  driverDetails: false,
   organisationUnits: false,
   dataElements: false,
   attributes: false,
@@ -21,13 +22,13 @@ export default function initialized (state = initialState, action) {
           newState.dataElements &&
           newState.attributes) {
         newState.configuration = true
-        if (newState.idsrCases) {
+        if (newState.vehicleDetails) {
           newState.everything = true
         }
       }
       return newState
     case RESET_CASES:
-      return Object.assign({}, state, { idsrCases: false, everything: false })
+      return Object.assign({}, state, { vehicleDetails: false, everything: false })
     default:
       return state
   }

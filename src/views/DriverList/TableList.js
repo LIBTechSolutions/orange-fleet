@@ -60,29 +60,26 @@ class TableList extends React.Component{
 
         return (
             <Grid container>
-                <ItemGrid xs={10} sm={12} md={12}>
+                <ItemGrid xs={12} sm={12} md={12}>
                     <RegularCard
-                        cardTitle="Vehicle Details"
-                        cardSubtitle="Details of vehicles"
+                        cardTitle="Booking Details"
+                        cardSubtitle="Booking Request"
                         content={
                             <Paper className={classes.root}>
                             <Table className={classes.table}>
                                 <TableHead>
                                 <TableRow>
-                                    <CustomTableCell>ID</CustomTableCell>
-                                    <CustomTableCell>Type</CustomTableCell>
-                                    <CustomTableCell>Make</CustomTableCell>
-                                    <CustomTableCell>Model</CustomTableCell>
-                                    <CustomTableCell>Engine#</CustomTableCell>
-                                    <CustomTableCell>Plate#</CustomTableCell>
-                                    <CustomTableCell>RegDate</CustomTableCell>
-                                    <CustomTableCell>ExpiryDate</CustomTableCell>
-                                    <CustomTableCell>Department</CustomTableCell>
-                                    <CustomTableCell>GPS</CustomTableCell>
+                                    <CustomTableCell>Requester</CustomTableCell>
+                                    <CustomTableCell numeric>Title</CustomTableCell>
+                                    {/* <CustomTableCell numeric>Department</CustomTableCell> */}
+                                    <CustomTableCell numeric>Booking Date</CustomTableCell>
+                                    <CustomTableCell numeric>From</CustomTableCell>
+                                    <CustomTableCell numeric>To</CustomTableCell>
+                                    <CustomTableCell numeric>Dispatch Time</CustomTableCell>
                                 </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {docs.map((vehicleDetail) => <DataRow key={vehicleDetail._id} vehicleDetail={vehicleDetail} {...props} />)}
+                                    {docs.map((driverDetail) => <DataRow key={driverDetail._id} driverDetail={driverDetail} {...props} />)}
                                 </TableBody>
                             </Table>
                             </Paper>
@@ -96,24 +93,20 @@ class TableList extends React.Component{
 }
 
 function DataRow (props) {
-    let {vehicleDetail, viewDoc, selectedInfo, classes} = props
+    let {driverDetail, viewDoc, selectedInfo, classes} = props
 
     return (
-        <TableRow className={classes.row} onClick={viewDoc(vehicleDetail._id)}>
+        <TableRow className={classes.row} onClick={viewDoc(driverDetail._id)}>
         <CustomTableCell component="th" scope="row">
-          {vehicleDetail.vehicleInfo.vehicleID}
+          {driverDetail.driverInfo.name}
         </CustomTableCell>
-        <CustomTableCell component="th" scope="row">
-          {vehicleDetail.vehicleInfo.vehicleType}
-        </CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.make}</CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.model}</CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.engineNumber}</CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.plateNumber}</CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.registrationDate}</CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.expiryDate}</CustomTableCell>
-        <CustomTableCell numeric>{vehicleDetail.vehicleInfo.department}</CustomTableCell>
-        </TableRow>
+        <CustomTableCell numeric>{driverDetail.driverInfo.title}</CustomTableCell>
+        {/* <CustomTableCell numeric>{driverDetail.driverInfo.department}</CustomTableCell> */}
+        <CustomTableCell numeric>{driverDetail.driverInfo.bookingDate}</CustomTableCell>
+        <CustomTableCell numeric>{driverDetail.driverInfo.startPlace}</CustomTableCell>
+        <CustomTableCell numeric>{driverDetail.driverInfo.destination}</CustomTableCell>
+        <CustomTableCell numeric>{driverDetail.driverInfo.timeout}</CustomTableCell>
+      </TableRow>
     )
   }
 
@@ -136,7 +129,6 @@ const CustomTableCell = withStyles(theme => ({
     },
     table: {
       minWidth: 700,
-
     },
     row: {
       '&:nth-of-type(odd)': {

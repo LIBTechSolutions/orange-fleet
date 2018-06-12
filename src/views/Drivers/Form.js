@@ -12,17 +12,17 @@ import {
 
 import avatar from 'assets/img/faces/marc.jpg';
 import FormInfo from './FormInfo';
-import { getVehicles, completeInfo } from 'bookingDetails'
+import { getDrivers, completeInfo } from 'driverDetails'
 
 class Form extends React.Component{
     constructor (props) {
         super(props)
 
-        let vehicleDetail = getVehicles(this.props)
+        let driverDetail = getDriver(this.props)
         this.state = {
             canSubmit: false,
-            vehicleDetail: vehicleDetail,
-      
+            driverDetail: driverDetail,
+
           }
         this.submitInfo = this.submitInfo.bind(this)
         this.updateDoc = this.updateDoc.bind(this)
@@ -35,12 +35,12 @@ class Form extends React.Component{
         if (!this.props.edit &&
             (nextProps.updateDoc === nextProps.docId ||
              this.props.docId !== nextProps.docId)) {
-          const vehicleDetail = nextProps.docId
-            ? this.props.vehicleDetails.find(({_id}) => _id === nextProps.docId)
-            : getVehicles(nextProps)
-    
+          const driverDetail = nextProps.docId
+            ? this.props.driverDetails.find(({_id}) => _id === nextProps.docId)
+            : getDrivers(nextProps)
+
           this.setState({
-            vehicleDetail: vehicleDetail
+            driverDetail: driverDetail
           })
         }
       }
@@ -51,26 +51,26 @@ class Form extends React.Component{
           let value = e.target.type === 'checkbox'
                     ? e.target.checked
                     : e.target.value
-    
+
           this.setState((prevState, props) => {
-            let vehicleDetail = {
-              vehicleInfo: {
+            let driverDetail = {
+              driverInfo: {
                 [key]: {$set: value}
               }
             }
-    
+
             if (typeof dependentProps === 'function') {
               let calculatedProps = dependentProps(value)
               for (let prop in calculatedProps) {
-                vehicleDetail.vehicleInfo[prop] = {$set: calculatedProps[prop]}
+                driverDetail.driverInfo[prop] = {$set: calculatedProps[prop]}
               }
             } else {
               for (let prop in dependentProps) {
-                vehicleDetail.vehicleInfo[prop] = {$set: dependentProps[prop](value)}
+                driverDetail.driverInfo[prop] = {$set: dependentProps[prop](value)}
               }
             }
-    
-            return update(prevState, {vehicleDetail, hasChanged: {$set: true}})
+
+            return update(prevState, {driverDetail, hasChanged: {$set: true}})
           })
           this.props.toggleHasChanged()
         }
@@ -88,12 +88,12 @@ class Form extends React.Component{
           ? this.props.edit && this.props.hasChanged && this.form.checkValidity()
           : false
       }
-    
+
       submitInfo (event) {
         event.preventDefault()
 
-        const vehicleDetail = completeInfo(this.state.vehicleDetail)
-        this.props.saveInfo(vehicleDetail)
+        const driverDetail = completeInfo(this.state.driverDetail)
+        this.props.saveInfo(driverDetail)
       }
 
     render(){
@@ -108,21 +108,21 @@ class Form extends React.Component{
         confirmCloseDialogVisible
       } = props
 
-          let {vehicleDetail} = this.state
-      
+          let {driverDetail} = this.state
+
 
         return (
             <form action='' onSubmit={this.submitInfo} ref={form => { this.form = form }}>
             <Grid container>
               <ItemGrid xs={12} sm={12} md={12}>
                 <RegularCard
-                 cardTitle="Vehicle"
-                 cardSubtitle="Add new vehicle"
+                 cardTitle="Driver"
+                 cardSubtitle="Add new driver"
                  content={
                   <FormInfo
                     edit={edit}
                     handleChange={this.updateDoc}
-                    {...vehicleDetail.vehicleInfo}
+                    {...driverDetail.driverInfo}
                   />
                  }
                  footer={
@@ -132,7 +132,7 @@ class Form extends React.Component{
                   edit={edit}
                   toggleEdit={toggleEdit}
                   confirmClose={confirmClose}
-                  {...vehicleDetail.vehicleInfo} />
+                  {...driverDetail.driverInfo} />
                 }
                 />
               </ItemGrid>

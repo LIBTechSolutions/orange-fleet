@@ -2,14 +2,14 @@
 
 import * as types from '../constants/ActionTypes'
 
-export function insertCase (idsrCase, localEdit = false) {
-  return { type: types.INSERT_CASE, idsrCase, localEdit }
+export function insertCase (vehicleDetail, localEdit = false) {
+  return { type: types.INSERT_CASE, vehicleDetail, localEdit }
 }
 
-export function updateCase (idsrCase, localEdit = false) {
-  return { type: types.UPDATE_CASE, idsrCase, localEdit }
+export function updateCase (vehicleDetail, localEdit = false) {
+  return { type: types.UPDATE_CASE, vehicleDetail, localEdit }
 }
 
-export function deleteCase (idsrCase) {
-  return { type: types.DELETE_CASE, id: idsrCase._id }
+export function deleteCase (vehicleDetail) {
+  return { type: types.DELETE_CASE, id: vehicleDetail._id }
 }

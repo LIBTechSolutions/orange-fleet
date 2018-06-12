@@ -14,7 +14,7 @@ export default function configureStore (configDb) {
   }
 
   const dynamicPouchMiddleware = createDynamicPouchReduxMiddleware([{
-    path: '/caseData/idsrCases',
+    path: '/caseData/vehicleDetails',
     db: null,
     name: 'caseDb',
     actions: {
@@ -22,7 +22,7 @@ export default function configureStore (configDb) {
       update: updateCase,
       remove: deleteCase
     },
-    initialBatchDispatched: dataLoaded('idsrCases')
+    initialBatchDispatched: dataLoaded('vehicleDetails')
   }, {
     path: '/organisationUnits',
     db: configDb,

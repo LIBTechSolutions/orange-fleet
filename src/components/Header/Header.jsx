@@ -24,6 +24,8 @@ class Header extends React.Component{
     }
     render(){
         const { classes, color } = this.props;
+        let { user } = this.props
+        console.log(user.role)
         return (
             <AppBar className={classes.appBar + (color !== undefined ? " " + classes[color]:"")}>
                 <Toolbar className={classes.container}>

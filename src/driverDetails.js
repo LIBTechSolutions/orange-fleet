@@ -7,15 +7,15 @@ import { toIndexableString } from 'pouchdb-collate'
  * properties directly manipulated.
  *
  * */
-export function getVehicles () {
+export function getdrivers () {
 
-  let vehicleModel = {
+  let driverModel = {
     created: new Date().getTime(),
-    vehicleInfo: {
+    driverInfo: {
         docId: receiptId(),
-        vehicleID: generateId(),
+        driverID: generateId(),
         date: toDateString(new Date()),
-        vehicleType: '',
+        driverType: '',
         make: '',
         model: '',
         engineNumber: '',
@@ -26,8 +26,8 @@ export function getVehicles () {
         tracking: ''
     }
   }
-  return Object.assign({}, vehicleModel, {
-    vehicleInfo: Object.assign({}, vehicleModel.vehicleInfo)
+  return Object.assign({}, driverModel, {
+    driverInfo: Object.assign({}, driverModel.driverInfo)
   })
 }
 
@@ -39,16 +39,16 @@ export function getVehicles () {
  * Use toIndexableString to create an id with relevant fields suitable for
  * sorting.
  * */
-export function getId (vehicleDetail) {
+export function getId (driverDetail) {
   return toIndexableString([
-    // vehicleDetail.vehicleInfo.date,
-    vehicleDetail.created
+    // driverDetail.driverInfo.date,
+    driverDetail.created
   ]).replace(/\u0000/g, '\u0001') // Workaround for replication bug due to Chromium's URL handling
 }
 
-export function getVehicleID (vehicleDetail) {
-  const info = vehicleDetail.vehicleInfo
-  return `${info.vehicleType} - ${info.registrationDueDate} - ${info.engineSize}`
+export function getDriverID (driverDetail) {
+  const info = driverDetail.driverInfo
+  return `${info.driverType} - ${info.registrationDueDate} - ${info.engineSize}`
 }
 
 /**
@@ -56,13 +56,13 @@ export function getVehicleID (vehicleDetail) {
  *
  * Initialize id:s if necessary and mark the case completed
  * */
-export function completeInfo (vehicleDetail) {
-  if (!vehicleDetail._id) {
-    vehicleDetail._id = getId(vehicleDetail)
+export function completeInfo (driverDetail) {
+  if (!driverDetail._id) {
+    driverDetail._id = getId(driverDetail)
   }
 
-  vehicleDetail.vehicleInfo.vehicleId = getVehicleID(vehicleDetail)
-  vehicleDetail.complete = true
+  driverDetail.driverInfo.driverId = getDriverID(driverDetail)
+  driverDetail.complete = true
 
-  return vehicleDetail
+  return driverDetail
 }

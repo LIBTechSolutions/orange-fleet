@@ -7,25 +7,29 @@ export default class TablePage extends React.Component {
       super(props)
       this.state = {
         currentSearchTerm: '',
-        idsrCases: props.idsrCases,
-        filteredIdsrCases: props.idsrCases
+        vehicleDetails: props.vehicleDetail,
+        filteredVehicleDetails: props.vehicleDetails
       }
       this.filterCases = this.filterCases.bind(this)
       this.handleSearch = this.handleSearch.bind(this)
     }
-  
-    filterCases (searchTerm, idsrCases) {
-      let result = idsrCases
+
+    filterCases (searchTerm, vehicleDetails) {
+      let result = vehicleDetails
       const stringContains = (haystack, needle) => {
         return haystack ? haystack.toLowerCase().includes(needle.toLowerCase()) : false
       }
-  
+
       if (searchTerm.length > 0) {
         result = result.filter((vehicleDetail) => {
-          if (stringContains(vehicleDetail.vehicleInfo.regNumber, searchTerm) ||
+          if (stringContains(vehicleDetail.vehicleInfo.vehicleType, searchTerm) ||
+            stringContains(vehicleDetail.vehicleInfo.make, searchTerm) ||
             stringContains(vehicleDetail.vehicleInfo.model, searchTerm) ||
-            stringContains(vehicleDetail.vehicleInfo.vehicleCategory, searchTerm) ||
-            stringContains(vehicleDetail.vehicleInfo.expiryDate, searchTerm)) {
+            stringContains(vehicleDetail.vehicleInfo.engineNumber, searchTerm) ||
+            stringContains(vehicleDetail.vehicleInfo.plateNumber, searchTerm) ||
+            stringContains(vehicleDetail.vehicleInfo.registrationDate, searchTerm) ||
+            stringContains(vehicleDetail.vehicleInfo.expiryDate, searchTerm) ||
+            stringContains(vehicleDetail.vehicleInfo.department, searchTerm)) {
             return true
           }
           return false
@@ -33,29 +37,29 @@ export default class TablePage extends React.Component {
       }
       return result
     }
-  
+
     handleSearch (search) {
       this.setState({
-        filteredIdsrCases: this.filterCases(search.word, this.state.idsrCases),
+        filteredVehicleDetails: this.filterCases(search.word, this.state.VehicleDetails),
         currentSearchTerm: search.word
       })
     }
-  
+
     componentWillReceiveProps (nextProps) {
       this.setState({
-        vehicleDetails: nextProps.idsrCases,
-        filteredIdsrCases: this.filterCases(this.state.currentSearchTerm, nextProps.idsrCases)
+        vehicleDetails: nextProps.vehicleDetails,
+        filteredVehicleDetails: this.filterCases(this.state.currentSearchTerm, nextProps.vehicleDetails)
       })
     }
-  
+
     render () {
-      const filteredIdsrCases = this.state.filteredIdsrCases
-      console.log(filteredIdsrCases)
-  
-      const complete = filteredIdsrCases.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.employeeID)
-    //   const incomplete = filteredIdsrCases.filter(idsrCase => !!idsrCase.caseInfo && !idsrCase.complete)
-  
-      
+      const filteredVehicleDetails = this.state.filteredVehicleDetails
+      console.log(filteredVehicleDetails)
+
+      const complete = filteredVehicleDetails.filter(vehicleDetail => !!vehicleDetail.vehicleInfo && !!vehicleDetail.complete && !vehicleDetail.vehicleInfo.employeeID)
+    //   const incomplete = filteredVehicleDetails.filter(idsrCase => !!idsrCase.caseInfo && !idsrCase.complete)
+
+
       return (
         <div>
         <div>
